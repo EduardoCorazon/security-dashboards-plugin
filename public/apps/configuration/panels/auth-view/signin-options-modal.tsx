@@ -13,20 +13,19 @@
  *   permissions and limitations under the License.
  */
 
+import {
+  EuiBasicTable,
+  EuiButton,
+  EuiModal,
+  EuiModalBody,
+  EuiModalFooter,
+  EuiModalHeader,
+  EuiModalHeaderTitle,
+  EuiSpacer,
+} from '@elastic/eui';
 import React, { Dispatch, SetStateAction } from 'react';
 import { DashboardOption } from '../../types';
 import { columns } from './dashboard-signin-options';
-import {
-  OuiButtonEmpty,
-  OuiButton,
-  OuiModal,
-  OuiModalBody,
-  OuiModalFooter,
-  OuiModalHeader,
-  OuiModalHeaderTitle,
-  OuiSpacer,
-  OuiCheckboxGroup
-} from '@opensearch-project/oui';
 
 interface DashboardSignInProps {
   dashboardOptions: DashboardOption[];
@@ -62,28 +61,28 @@ export function SignInOptionsModal(props: DashboardSignInProps): JSX.Element {
 
   if (isModalVisible) {
     modal = (
-      <OuiModal onClose={closeModal}>
-        <OuiModalHeader>
-          <OuiModalHeaderTitle>Dashboards sign-in options</OuiModalHeaderTitle>
-        </OuiModalHeader>
-        <OuiModalBody>
-          Select one or multiple authentication options to appear on the sign-in window for OpenSearch Dashboards.
-          <OuiSpacer />
-
-          <OuiCheckboxGroup
-            options={props.dashboardOptions.map((option) => ({
-              label: option.name,
-              value: option,
-              checked: option.status,
-            }))}
-            onChange={(selectedOptions) => {
-              setNewSignInOptions(selectedOptions.map((option) => option.value));
+      <EuiModal onClose={closeModal}>
+        <EuiModalHeader>
+          <EuiModalHeaderTitle>Dashboard Sign In Options</EuiModalHeaderTitle>
+        </EuiModalHeader>
+        <EuiModalBody>
+          Enable/Disable sign-in options for OpenSearch Dashboard.
+          <EuiSpacer />
+          <EuiBasicTable
+            tableCaption="Dashboard sign in options available"
+            items={props.dashboardOptions}
+            rowHeader="name"
+            columns={columns.slice(0, 1)}
+            itemId={'name'}
+            selection={{
+              onSelectionChange: setNewSignInOptions,
+              initialSelected: actualSignInOptions,
             }}
           />
-        </OuiModalBody>
-        <OuiModalFooter>
-          <OuiButtonEmpty onClick={closeModal}>Cancel</OuiButtonEmpty>
-          <OuiButton
+        </EuiModalBody>
+        <EuiModalFooter>
+          <EuiButton onClick={closeModal}>Cancel</EuiButton>
+          <EuiButton
             data-testid="update"
             onClick={() => {
               props.handleUpdate(newSignInOptions);
@@ -93,16 +92,16 @@ export function SignInOptionsModal(props: DashboardSignInProps): JSX.Element {
             disabled={disableUpdate}
           >
             Update
-          </OuiButton>
-        </OuiModalFooter>
-      </OuiModal>
+          </EuiButton>
+        </EuiModalFooter>
+      </EuiModal>
     );
   }
   return (
     <div>
-      <OuiButton data-testid="edit" onClick={showModal}>
+      <EuiButton data-testid="edit" onClick={showModal}>
         Edit
-      </OuiButton>
+      </EuiButton>
       {modal}
     </div>
   );

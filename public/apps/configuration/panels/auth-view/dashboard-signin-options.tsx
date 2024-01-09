@@ -75,15 +75,6 @@ export function SignInOptionsPanel(props: SignInOptionsPanelProps) {
   const [dashboardOptions, setDashboardOptions] = useState<DashboardOption[]>([]);
 
   useEffect(() => {
-    const MakeAuthTypeHumanReadable = (authType) =>{
-      const authTypeMap = {
-        BASIC:"Basic Authentication",
-        SAML:"SAML",
-        OPENID:"OpenID Connect",
-        ANONYMOUS:"Anonymous",
-      };
-      return authTypeMap[authType] || authType;
-    }
     const getDasboardOptions = () => {
       const options = domains
         .map((domain) => {
@@ -91,11 +82,11 @@ export function SignInOptionsPanel(props: SignInOptionsPanelProps) {
 
           const option = data.http_authenticator.type.toUpperCase();
           if (option in DashboardSignInOptions) {
-            const displayName = MakeAuthTypeHumanReadable(option);
             const dashboardOption: DashboardOption = {
-              name: displayName,
+              name: option,
               status: signInEnabledOptions.indexOf(option) > -1,
             };
+
             return dashboardOption;
           }
         })
@@ -103,6 +94,7 @@ export function SignInOptionsPanel(props: SignInOptionsPanelProps) {
         .filter(
           (option, index, arr) => arr.findIndex((opt) => opt?.name === option?.name) === index
         ) as DashboardOption[];
+
       setDashboardOptions(options);
     };
 
@@ -154,11 +146,12 @@ export function SignInOptionsPanel(props: SignInOptionsPanelProps) {
       <EuiPageContentHeader>
         <EuiPageContentHeaderSection>
           <EuiTitle size="s">
-            <h3>Dashboards sign-in options</h3>
+            <h3>Dashboard Sign In Options</h3>
           </EuiTitle>
           <EuiText size="xs" color="subdued">
             <p>
-              Configure one or multiple authentication options to appear on the sign-in window for OpenSearch Dashboards.
+              Configure one or multiple authentication options to appear on the sign-in windows for
+              OpenSearch Dashboard.
             </p>
           </EuiText>
         </EuiPageContentHeaderSection>
